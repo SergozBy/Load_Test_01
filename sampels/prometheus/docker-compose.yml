@@ -2,11 +2,17 @@ version: '3.8'
 
 services:
   node-exporter:
-    image: prom/node-exporter:v1.3.1
+    container_name: node-exporter
+    # image: prom/node-exporter:v1.3.1
+    image: prom/node-exporter:v1.9.1
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
+    depends_on:
+      - prometheus
+    links:
+      - prometheus
     command:
       - '--path.procfs=/host/proc'
       - '--path.rootfs=/rootfs'
@@ -16,6 +22,7 @@ services:
       - "9100:9100"
 
   prometheus:
+    container_name: prometheus
     image: prom/prometheus:v2.32.1
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -33,11 +40,11 @@ services:
     image: grafana/grafana:8.3.3
     depends_on:
       - prometheus
+    links:
+      - prometheus
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    links:
-      - prometheus
     ports:
       - "3000:3000"
     volumes:
