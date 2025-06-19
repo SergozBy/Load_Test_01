@@ -17,8 +17,8 @@ services:
 
   influxdb:
     container_name: influxdb
-    # image: influxdb:1.8.10-alpine
-    image: influxdb:2.7.12
+    image: influxdb:1.8.10
+    # image: influxdb:2.7.12
     environment:
       - INFLUXDB_DB=influx
       - INFLUXDB_ADMIN_USER=admin
